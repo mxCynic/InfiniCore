@@ -70,6 +70,10 @@ class TestTensor(CTensor):
             self._torch_tensor = torch.rand(
                 torch_shape, dtype=to_torch_dtype(dt), device=torch_device_map[device]
             )
+        elif mode == "bool":
+            self._torch_tensor = torch.randint(
+                0, 2, torch_shape, dtype=torch.bool, device=torch_device_map[device]
+            )
         elif mode == "zeros":
             self._torch_tensor = torch.zeros(
                 torch_shape, dtype=to_torch_dtype(dt), device=torch_device_map[device]
