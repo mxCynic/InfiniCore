@@ -3,7 +3,7 @@
 #include "infiniop/ops/silu.h"
 
 #ifdef ENABLE_CPU_API
-#include "cpu/silu.h"
+#include "cpu/silu_cpu.h"
 #endif
 #ifdef ENABLE_NVIDIA_API
 #include "nvidia/silu_nvidia.cuh"
