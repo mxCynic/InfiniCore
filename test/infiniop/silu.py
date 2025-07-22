@@ -19,11 +19,6 @@ from libinfiniop import (
 )
 from enum import Enum, auto
 
-import resource
-
-# 设置最大可用虚拟内存为 2GB（单位是字节）
-GB = 4 * 1024**3
-resource.setrlimit(resource.RLIMIT_AS, (GB, GB))
 
 # ==============================================================================
 #  Configuration (Internal Use Only)
