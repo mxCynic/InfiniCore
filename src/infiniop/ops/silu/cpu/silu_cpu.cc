@@ -1,5 +1,5 @@
+#include "silu_cpu.h"
 #include "infinicore.h"
-#include "silu.h"
 
 namespace op::silu::cpu {
 
