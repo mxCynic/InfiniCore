@@ -132,7 +132,7 @@ def test(
         check_error(
             LIBINFINIOP.infiniopLogicalOr(
                 descriptor,
-                ctypes.c_void_p(workspace.data()),
+                workspace.data(),
                 workspace.size(),
                 c.data(),
                 a.data(),

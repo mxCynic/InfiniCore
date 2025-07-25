@@ -132,7 +132,7 @@ def test(
         check_error(
             LIBINFINIOP.infiniopSilu(
                 descriptor,
-                ctypes.c_void_p(workspace.data()),
+                workspace.data(),
                 workspace.size(),
                 y.data(),
                 x.data(),
