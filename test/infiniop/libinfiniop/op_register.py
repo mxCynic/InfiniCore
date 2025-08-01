@@ -339,6 +339,50 @@ def relu_backward_(lib):
 
 
 @OpRegister.operator
+def gelu_(lib):
+    lib.infiniopCreateGeluDescriptor.restype = c_int32
+    lib.infiniopCreateGeluDescriptor.argtypes = [
+        infiniopHandle_t,
+        POINTER(infiniopOperatorDescriptor_t),
+        infiniopTensorDescriptor_t,
+        infiniopTensorDescriptor_t,
+    ]
+    lib.infiniopGelu.restype = c_int32
+    lib.infiniopGelu.argtypes = [
+        infiniopOperatorDescriptor_t,
+        c_void_p,
+        c_size_t,
+        c_void_p,
+        c_void_p,
+        c_void_p,
+    ]
+    lib.infiniopDestroyGeluDescriptor.restype = c_int32
+    lib.infiniopDestroyGeluDescriptor.argtypes = [infiniopOperatorDescriptor_t]
+
+
+@OpRegister.operator
+def gelu_backward_(lib):
+    lib.infiniopCreateGeluBackWardDescriptor.restype = c_int32
+    lib.infiniopCreateGeluBackWardDescriptor.argtypes = [
+        infiniopHandle_t,
+        POINTER(infiniopOperatorDescriptor_t),
+        infiniopTensorDescriptor_t,
+        infiniopTensorDescriptor_t,
+    ]
+    lib.infiniopGeluBackWard.restype = c_int32
+    lib.infiniopGeluBackWard.argtypes = [
+        infiniopOperatorDescriptor_t,
+        c_void_p,
+        c_size_t,
+        c_void_p,
+        c_void_p,
+        c_void_p,
+    ]
+    lib.infiniopDestroyGeluBackWardDescriptor.restype = c_int32
+    lib.infiniopDestroyGeluBackWardDescriptor.argtypes = [infiniopOperatorDescriptor_t]
+
+
+@OpRegister.operator
 def rms_norm_(lib):
     lib.infiniopCreateRMSNormDescriptor.restype = c_int32
     lib.infiniopCreateRMSNormDescriptor.argtypes = [
