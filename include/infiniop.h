@@ -7,6 +7,7 @@
 #include "infiniop/ops/causal_softmax.h"
 #include "infiniop/ops/clip.h"
 #include "infiniop/ops/conv.h"
+#include "infiniop/ops/crossentropyloss_backward.h"
 #include "infiniop/ops/div.h"
 #include "infiniop/ops/gelu.h"
 #include "infiniop/ops/gelu_backward.h"
