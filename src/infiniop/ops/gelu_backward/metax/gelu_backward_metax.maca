@@ -1,6 +1,6 @@
 #include "../../../elementwise/metax/elementwise_metax.h"
 
-#include "../cuda/kernel.cuh"
+#include "metax_kernel.cuh"
 #include "infinicore.h"
 #include "gelu_backward_metax.h"
 
@@ -44,11 +44,11 @@ infiniStatus_t Descriptor::calculate(
     }
     switch (_dtype) {
     case INFINI_DTYPE_F16:
-        return _device_info->calculate<256, cuda::GeluBackWardOp, fp16_t>(_info, workspace, output, inputs, stream);
+        return _device_info->calculate<256, cuda::GeluBackWardOp, half>(_info, workspace, output, inputs, stream);
     case INFINI_DTYPE_F32:
         return _device_info->calculate<256, cuda::GeluBackWardOp, float>(_info, workspace, output, inputs, stream);
     case INFINI_DTYPE_BF16:
-        return _device_info->calculate<256, cuda::GeluBackWardOp, bf16_t>(_info, workspace, output, inputs, stream);
+        return _device_info->calculate<256, cuda::GeluBackWardOp, hpcc_bfloat16>(_info, workspace, output, inputs, stream);
     default:
         return INFINI_STATUS_BAD_TENSOR_DTYPE;
     }

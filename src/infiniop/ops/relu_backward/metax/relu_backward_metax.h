@@ -1,12 +1,8 @@
-#ifndef __RELU_METAX_API_H__
-#define __RELU_METAX_API_H__
-
-#ifdef ENABLE_NINETOOTHED
+#ifndef __RELU_BACKWARD_METAX_API_H__
+#define __RELU_BACKWARD_METAX_API_H__
 
 #include "../../../elementwise/metax/elementwise_metax_api.h"
 
-ELEMENTWISE_DESCRIPTOR(relu, metax)
+ELEMENTWISE_DESCRIPTOR(relu_backward, metax)
 
-#endif
-
-#endif // __RELU_METAX_API_H__
+#endif // __RELU_BACKWARD_METAX_API_H__

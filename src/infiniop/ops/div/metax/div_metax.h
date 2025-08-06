@@ -1,19 +1,19 @@
-#ifndef __DIV_CUDA_API_H__
-#define __DIV_CUDA_API_H__
+#ifndef __DIV_METAX_API_H__
+#define __DIV_METAX_API_H__
 
-#include "../../../elementwise/nvidia/elementwise_nvidia_api.cuh"
+#include "../../../elementwise/metax/elementwise_metax_api.h"
 
 namespace op::div::metax {
 class Descriptor final : public InfiniopDescriptor {
     infiniDtype_t _dtype;
     op::elementwise::ElementwiseInfo _info;
-    std::unique_ptr<op::elementwise::nvidia::DeviceImpl> _device_info;
+    std::unique_ptr<op::elementwise::metax::DeviceImpl> _device_info;
     size_t _workspace_size;
 
     Descriptor(
         infiniDtype_t dtype,
         op::elementwise::ElementwiseInfo info,
-        op::elementwise::nvidia::DeviceImpl *device_info,
+        op::elementwise::metax::DeviceImpl *device_info,
         size_t workspace_size,
         infiniDevice_t device_type,
         int device_id)
@@ -42,4 +42,4 @@ public:
         void *stream) const;
 };
 } // namespace op::div::metax
-#endif // __DIV_CUDA_API_H__
+#endif // __DIV_METAX_API_H__
