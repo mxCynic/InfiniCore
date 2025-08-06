@@ -4,7 +4,7 @@
 #include "infinicore.h"
 #include "gelu_metax.h"
 
-namespace op::gelu::metax{
+namespace op::gelu_metax::metax{
 Descriptor::~Descriptor() = default;
 
 infiniStatus_t Descriptor::create(infiniopHandle_t handle_,
@@ -52,4 +52,4 @@ infiniStatus_t Descriptor::calculate(
     }
     return INFINI_STATUS_SUCCESS;
 }
-} // namespace op::silu::metax
+} // namespace op::gelu_metax::metax
