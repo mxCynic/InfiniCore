@@ -15,14 +15,12 @@ infiniStatus_t Descriptor::create(infiniopHandle_t handle_,
     auto dtype = output_desc->dtype();
 
     const auto &a_desc = input_descs.at(0);
-    const auto &b_desc = input_descs.at(1);
     const auto c_shape = output_desc->shape();
     const auto a_shape = a_desc->shape();
-    const auto b_shape = b_desc->shape();
 
     CHECK_DTYPE(dtype, INFINI_DTYPE_F16, INFINI_DTYPE_F32, INFINI_DTYPE_BF16);
 
-    CHECK_SAME_SHAPE(c_shape, a_shape, b_shape);
+    CHECK_SAME_SHAPE(c_shape, a_shape);
 
     // create metax elementwise descriptor
     CREATE_ELEMENTWISE_METAX_DESCRIPTOR(handle, dtype, output_desc, input_descs)

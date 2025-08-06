@@ -26,7 +26,7 @@ infiniStatus_t Descriptor::create(infiniopHandle_t handle_,
     CHECK_SAME_SHAPE(c_shape, a_shape, b_shape);
 
     // create CPU elementwise descriptor
-    CREATE_ELEMENTWISE_CUDA_DESCRIPTOR(handle, dtype, output_desc, input_descs)
+    CREATE_ELEMENTWISE_CUDA_DESCRIPTOR(handle, dtype, output_desc, input_descs);
 
     return INFINI_STATUS_SUCCESS;
 }

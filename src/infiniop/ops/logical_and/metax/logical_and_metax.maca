@@ -1,18 +1,17 @@
-#include "../../../elementwise/nvidia/elementwise_nvidia.cuh"
+#include "../../../elementwise/metax/elementwise_metax.h"
 
 #include "../cuda/kernel.cuh"
 #include "infinicore.h"
-#include "logical_and_nvidia.cuh"
-#include <cstdint>
+#include "logical_and_metax.h"
 
-namespace op::logical_and::nvidia {
+namespace op::logical_and::metax {
 Descriptor::~Descriptor() = default;
 
 infiniStatus_t Descriptor::create(infiniopHandle_t handle_,
                                   Descriptor **desc_ptr,
                                   infiniopTensorDescriptor_t output_desc,
                                   std::vector<infiniopTensorDescriptor_t> input_descs) {
-    auto handle = reinterpret_cast<device::nvidia::Handle *>(handle_);
+    auto handle = reinterpret_cast<device::metax::Handle *>(handle_);
     auto dtype = output_desc->dtype();
 
     const auto &a_desc = input_descs.at(0);
@@ -26,7 +25,7 @@ infiniStatus_t Descriptor::create(infiniopHandle_t handle_,
     CHECK_SAME_SHAPE(c_shape, a_shape, b_shape);
 
     // create CPU elementwise descriptor
-    CREATE_ELEMENTWISE_CUDA_DESCRIPTOR(handle, dtype, output_desc, input_descs);
+    CREATE_ELEMENTWISE_METAX_DESCRIPTOR(handle, dtype, output_desc, input_descs);
 
     return INFINI_STATUS_SUCCESS;
 }
@@ -53,4 +52,4 @@ infiniStatus_t Descriptor::calculate(
     }
     return INFINI_STATUS_SUCCESS;
 }
-} // namespace op::logical_and::nvidia
+} // namespace op::logical_and::metax

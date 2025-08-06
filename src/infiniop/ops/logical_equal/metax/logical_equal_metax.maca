@@ -1,18 +1,18 @@
-#include "../../../elementwise/nvidia/elementwise_nvidia.cuh"
+#include "../../../elementwise/metax/elementwise_metax.h"
 
 #include "../cuda/kernel.cuh"
 #include "infinicore.h"
-#include "logical_and_nvidia.cuh"
+#include "logical_equal_metax.h"
 #include <cstdint>
 
-namespace op::logical_and::nvidia {
+namespace op::logical_equal::metax {
 Descriptor::~Descriptor() = default;
 
 infiniStatus_t Descriptor::create(infiniopHandle_t handle_,
                                   Descriptor **desc_ptr,
                                   infiniopTensorDescriptor_t output_desc,
                                   std::vector<infiniopTensorDescriptor_t> input_descs) {
-    auto handle = reinterpret_cast<device::nvidia::Handle *>(handle_);
+    auto handle = reinterpret_cast<device::metax::Handle *>(handle_);
     auto dtype = output_desc->dtype();
 
     const auto &a_desc = input_descs.at(0);
@@ -26,7 +26,7 @@ infiniStatus_t Descriptor::create(infiniopHandle_t handle_,
     CHECK_SAME_SHAPE(c_shape, a_shape, b_shape);
 
     // create CPU elementwise descriptor
-    CREATE_ELEMENTWISE_CUDA_DESCRIPTOR(handle, dtype, output_desc, input_descs);
+    CREATE_ELEMENTWISE_METAX_DESCRIPTOR(handle, dtype, output_desc, input_descs);
 
     return INFINI_STATUS_SUCCESS;
 }
@@ -45,12 +45,12 @@ infiniStatus_t Descriptor::calculate(
     }
     switch (_dtype) {
     case INFINI_DTYPE_BOOL:
-        return _device_info->calculate<256, cuda::LogicalAndOp, bool>(_info, workspace, output, inputs, stream);
+        return _device_info->calculate<256, cuda::LogicalEqualOp, bool>(_info, workspace, output, inputs, stream);
     case INFINI_DTYPE_I8:
-        return _device_info->calculate<256, cuda::LogicalAndOp, int8_t>(_info, workspace, output, inputs, stream);
+        return _device_info->calculate<256, cuda::LogicalEqualOp, int8_t>(_info, workspace, output, inputs, stream);
     default:
         return INFINI_STATUS_BAD_TENSOR_DTYPE;
     }
     return INFINI_STATUS_SUCCESS;
 }
-} // namespace op::logical_and::nvidia
+} // namespace op::logical_equal::metax

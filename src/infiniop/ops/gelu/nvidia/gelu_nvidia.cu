@@ -23,7 +23,7 @@ infiniStatus_t Descriptor::create(infiniopHandle_t handle_,
     CHECK_SAME_SHAPE(c_shape, a_shape);
 
     // create CPU elementwise descriptor
-    CREATE_ELEMENTWISE_CUDA_DESCRIPTOR(handle, dtype, output_desc, input_descs)
+    CREATE_ELEMENTWISE_CUDA_DESCRIPTOR(handle, dtype, output_desc, input_descs)；
 
     return INFINI_STATUS_SUCCESS;
 }
@@ -35,8 +35,7 @@ infiniStatus_t Descriptor::calculate(
     std::vector<const void *> inputs,
     void *stream) const {
 
-    // std::cout << "at calutate workspace: " << workspace << std::endl;
-    // std::cout << "at calutate workspace sieze: " << workspace_size << std::endl;
+
     if (workspace_size < _workspace_size) {
         return INFINI_STATUS_INSUFFICIENT_WORKSPACE;
     }

@@ -20,23 +20,6 @@ __device__ __forceinline__ cuda_bfloat16 htanh(const cuda_bfloat16 x) const {
     float tanh_val = tanhf(xf);
     return __float2bfloat16(tanh_val);
 }
-
-__device__ __forceinline__ half htanh(const half x) const {
-    // For half precision, convert to float, compute tanh, and convert back
-    float xf = __half2float(x);
-    float tanh_val = tanhf(xf);
-    return __float2half(tanh_val);
-}
-
-__device__ __forceinline__ cuda_bfloat16 htanh_approx(const cuda_bfloat16 x) const {
-    // For bfloat16, use Pade approximation similar to half
-    cuda_bfloat16 x2 = __hmul(x, x);
-    cuda_bfloat16 twenty_seven = __float2bfloat16(27.0f);
-    cuda_bfloat16 nine = __float2bfloat16(9.0f);
-    cuda_bfloat16 numerator = __hmul(x, __hadd(twenty_seven, x2));
-    cuda_bfloat16 denominator = __hadd(twenty_seven, __hmul(nine, x2));
-    return __hdiv(numerator, denominator);
-}
     float pi = 3.1415927f;
     float kappa = 0.044715f;
     float beta = sqrtf(2 / pi);

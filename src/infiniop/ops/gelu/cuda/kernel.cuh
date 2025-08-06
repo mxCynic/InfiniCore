@@ -2,6 +2,7 @@
 #define __GELU_CUDA_H__
 
 namespace op::gelu::cuda {
+
 typedef struct GeluOp {
 private:
     float pi = 3.1415927f;
@@ -27,6 +28,7 @@ private:
     half h_one = __float2half(1.0f);
     cuda_bfloat162 b2_one = __float2bfloat162_rn(1.0f);
     cuda_bfloat16 b_one = __float2bfloat16(1.0f);
+
 
 public:
     static constexpr size_t num_inputs = 1;
@@ -64,11 +66,9 @@ public:
         } else if constexpr (std::is_same_v<T, float>) {
             float inner = __fmul_rn(beta, __fadd_rn(input, __fmul_rn(kappa, __fmul_rn(input, __fmul_rn(input, input)))));
             float res = __fmul_rn(0.5f, __fmul_rn(input, __fadd_rn(1.0f, tanhf(inner))));
+            
             return res;
-
-        } else {
-            return 0.5 * input * (1 + beta * (input + kappa * powf(input, 3)));
-        }
+        } 
     };
 } GeluOp;
 } // namespace op::gelu::cuda

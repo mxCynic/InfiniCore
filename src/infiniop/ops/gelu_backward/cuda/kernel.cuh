@@ -2,8 +2,10 @@
 #define __gelu_backward_CUDA_H__
 
 namespace op::gelu_backward::cuda {
+    
 typedef struct GeluBackWardOp {
 private:
+
     float pi = 3.1415927f;
     float kappa = 0.044715f;
     float beta = sqrtf(2 / pi);

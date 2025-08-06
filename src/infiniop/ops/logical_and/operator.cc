@@ -8,6 +8,9 @@
 #ifdef ENABLE_NVIDIA_API
 #include "nvidia/logical_and_nvidia.cuh"
 #endif
+#ifdef ENABLE_METAX_API
+#include "metax/logical_and_metax.h"
+#endif
 
 __C infiniStatus_t infiniopCreateLogicalAndDescriptor(
     infiniopHandle_t handle,
@@ -30,6 +33,10 @@ __C infiniStatus_t infiniopCreateLogicalAndDescriptor(
 #ifdef ENABLE_NVIDIA_API
         CTEATE(INFINI_DEVICE_NVIDIA, nvidia);
 #endif
+#ifdef ENABLE_METAX_API
+        CTEATE(INFINI_DEVICE_METAX, metax);
+#endif
+
 
     default:
         return INFINI_STATUS_DEVICE_TYPE_NOT_SUPPORTED;
@@ -48,6 +55,9 @@ __C infiniStatus_t infiniopGetLogicalAndWorkspaceSize(infiniopLogicalAndDescript
 #endif
 #ifdef ENABLE_NVIDIA_API
         GET(INFINI_DEVICE_NVIDIA, nvidia);
+#endif
+#ifdef ENABLE_METAX_API
+        GET(INFINI_DEVICE_METAX, metax);
 #endif
 
     default:
@@ -77,6 +87,9 @@ __C infiniStatus_t infiniopLogicalAnd(
 #ifdef ENABLE_NVIDIA_API
         CALCULATE(INFINI_DEVICE_NVIDIA, nvidia);
 #endif
+#ifdef ENABLE_METAX_API
+        CALCULATE(INFINI_DEVICE_METAX, metax);
+#endif
 
     default:
         return INFINI_STATUS_DEVICE_TYPE_NOT_SUPPORTED;
@@ -95,6 +108,9 @@ __C infiniStatus_t infiniopDestroyLogicalAndDescriptor(infiniopLogicalAndDescrip
 #endif
 #ifdef ENABLE_NVIDIA_API
         DELETE(INFINI_DEVICE_NVIDIA, nvidia);
+#endif
+#ifdef ENABLE_METAX_API
+        DELETE(INFINI_DEVICE_METAX, metax);
 #endif
 
     default:

@@ -4,6 +4,19 @@
 namespace op::gelu::cuda {
 typedef struct GeluOp {
 private:
+__device__ __forceinline__ half htanh_approx(const half x) const {
+    // Pade approximation: tanh(x) ≈ x * (27 + x^2) / (27 + 9*x^2)
+    // More accurate for small values
+    float fx = __half2float(x);
+    float tanh_val = tanhf(fx);
+    return __float2half(tanh_val);
+}
+
+__device__ __forceinline__ cuda_bfloat16 htanh_approx(const cuda_bfloat16 x) const {
+    float fx = __bfloat162float(x);
+    float tanh_val = tanhf(fx);
+    return __float2bfloat16(tanh_val);
+}
     float pi = 3.1415927f;
     float kappa = 0.044715f;
     float beta = sqrtf(2 / pi);
@@ -19,39 +32,7 @@ private:
 
     half h_one = __float2half(1.0f);
     cuda_bfloat16 b_one = __float2bfloat16(1.0f);
-// MetaX tanh implementations for half and bfloat16 types
-__device__ __forceinline__ half htanh_approx(const half x) const{
-    // Pade approximation: tanh(x) ≈ x * (27 + x^2) / (27 + 9*x^2)
-    // More accurate for small values
-    half x2 = __hmul(x, x);
-    half numerator = __hmul(x, __hadd(__float2half(27.0f), x2));
-    half denominator = __hadd(__float2half(27.0f), __hmul(__float2half(9.0f), x2));
-    return __hdiv(numerator, denominator);
-}
 
-__device__ __forceinline__ cuda_bfloat16 htanh(const cuda_bfloat16 x) const{
-    // For bfloat16, convert to float, compute tanh, and convert back
-    float xf = __bfloat162float(x);
-    float tanh_val = tanhf(xf);
-    return __float2bfloat16(tanh_val);
-}
-
-__device__ __forceinline__ half htanh(const half x) const{
-    // For half precision, convert to float, compute tanh, and convert back
-    float xf = __half2float(x);
-    float tanh_val = tanhf(xf);
-    return __float2half(tanh_val);
-}
-
-__device__ __forceinline__ cuda_bfloat16 htanh_approx(const cuda_bfloat16 x) const{
-    // For bfloat16, use Pade approximation similar to half
-    cuda_bfloat16 x2 = __hmul(x, x);
-    cuda_bfloat16 twenty_seven = __float2bfloat16(27.0f);
-    cuda_bfloat16 nine = __float2bfloat16(9.0f);
-    cuda_bfloat16 numerator = __hmul(x, __hadd(twenty_seven, x2));
-    cuda_bfloat16 denominator = __hadd(twenty_seven, __hmul(nine, x2));
-    return __hdiv(numerator, denominator);
-}
 public:
     static constexpr size_t num_inputs = 1;
     template <typename T>
@@ -66,18 +47,16 @@ public:
             half res = __hmul(h_point_fiv, __hmul(input, __hadd(h_one, htanh_approx(inner))));
 
             return res;
-
         } else if constexpr (std::is_same_v<T, cuda_bfloat16>) {
             cuda_bfloat16 inner = __hmul(b_beta, __hadd(input, __hmul(b_kappa, __hmul(input, __hmul(input, input)))));
             cuda_bfloat16 res = __hmul(b_point_fiv, __hmul(input, __hadd(b_one, htanh_approx(inner))));
 
             return res;
-
         } else if constexpr (std::is_same_v<T, float>) {
             float inner = __fmul_rn(beta, __fadd_rn(input, __fmul_rn(kappa, __fmul_rn(input, __fmul_rn(input, input)))));
             float res = __fmul_rn(0.5f, __fmul_rn(input, __fadd_rn(1.0f, tanhf(inner))));
+            
             return res;
-
         } else {
             return 0.5 * input * (1 + beta * (input + kappa * powf(input, 3)));
         }

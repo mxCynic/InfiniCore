@@ -8,6 +8,9 @@
 #ifdef ENABLE_NVIDIA_API
 #include "nvidia/gelu_backward_nvidia.cuh"
 #endif
+#ifdef ENABLE_METAX_API
+#include "metax/gelu_backward_metax.h"
+#endif
 
 __C infiniStatus_t infiniopCreateGeluBackWardDescriptor(
     infiniopHandle_t handle,
@@ -30,6 +33,9 @@ __C infiniStatus_t infiniopCreateGeluBackWardDescriptor(
 #ifdef ENABLE_NVIDIA_API
         CTEATE(INFINI_DEVICE_NVIDIA, nvidia);
 #endif
+#ifdef ENABLE_METAX_API
+        CTEATE(INFINI_DEVICE_METAX, metax);
+#endif
 
     default:
         return INFINI_STATUS_DEVICE_TYPE_NOT_SUPPORTED;
@@ -48,6 +54,9 @@ __C infiniStatus_t infiniopGetGeluBackWardWorkspaceSize(infiniopGeluBackWardDesc
 #endif
 #ifdef ENABLE_NVIDIA_API
         GET(INFINI_DEVICE_NVIDIA, nvidia);
+#endif
+#ifdef ENABLE_METAX_API
+        GET(INFINI_DEVICE_METAX, metax);
 #endif
 
     default:
@@ -77,6 +86,9 @@ __C infiniStatus_t infiniopGeluBackWard(
 #ifdef ENABLE_NVIDIA_API
         CALCULATE(INFINI_DEVICE_NVIDIA, nvidia);
 #endif
+#ifdef ENABLE_METAX_API
+        CALCULATE(INFINI_DEVICE_METAX, metax);
+#endif
 
     default:
         return INFINI_STATUS_DEVICE_TYPE_NOT_SUPPORTED;
@@ -95,6 +107,9 @@ __C infiniStatus_t infiniopDestroyGeluBackWardDescriptor(infiniopGeluBackWardDes
 #endif
 #ifdef ENABLE_NVIDIA_API
         DELETE(INFINI_DEVICE_NVIDIA, nvidia);
+#endif
+#ifdef ENABLE_METAX_API
+        DELETE(INFINI_DEVICE_METAX, metax);
 #endif
 
     default:
