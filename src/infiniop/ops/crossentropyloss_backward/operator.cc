@@ -15,18 +15,18 @@
 __C infiniStatus_t infiniopCreateCrossEntropyLossBackWardDescriptor(
     infiniopHandle_t handle,
     infiniopCrossEntropyLossBackWardDescriptor_t *desc_ptr,
-    infiniopTensorDescriptor_t c_desc,
-    infiniopTensorDescriptor_t a_desc,
-    infiniopTensorDescriptor_t b_desc) {
+    infiniopTensorDescriptor_t grad_logits_desc,
+    infiniopTensorDescriptor_t probs_desc,
+    infiniopTensorDescriptor_t target_desc) {
 
 #define CREATE(CASE, NAMESPACE)                                                                 \
     case CASE:                                                                                  \
         return op::CrossEntropyLossBackWard::NAMESPACE::Descriptor::create(                     \
             handle,                                                                             \
             reinterpret_cast<op::CrossEntropyLossBackWard::NAMESPACE::Descriptor **>(desc_ptr), \
-            c_desc,                                                                             \
-            {a_desc,                                                                            \
-             b_desc})
+            grad_logits_desc,                                                                   \
+            {probs_desc,                                                                        \
+             target_desc})
 
     switch (handle->device) {
 
@@ -82,23 +82,26 @@ __C infiniStatus_t infiniopCrossEntropyLossBackWard(
     infiniopCrossEntropyLossBackWardDescriptor_t desc,
     void *workspace,
     size_t workspace_size,
-    void *c,
-    const void *a,
-    const void *b,
+    void *grad_logits,
+    const void *probs,
+    const void *target,
     void *stream) {
 
 #define CALCULATE(CASE, NAMESPACE)                                                                 \
     case CASE:                                                                                     \
         return reinterpret_cast<const op::CrossEntropyLossBackWard::NAMESPACE::Descriptor *>(desc) \
-            ->calculate(workspace, workspace_size, c, {a, b}, stream)
+            ->calculate(workspace, workspace_size, grad_logits, {probs, target}, stream)
 
     switch (desc->device_type) {
 
 #ifdef ENABLE_CPU_API
         CALCULATE(INFINI_DEVICE_CPU, cpu);
 #endif
-#ifdef ENABLE_NVIDIA_API || ENABLE_ILUVATAR_API
+#ifdef ENABLE_NVIDIA_API
         CALCULATE(INFINI_DEVICE_NVIDIA, nvidia);
+#endif
+#ifdef ENABLE_ILUVATAR_API
+        CALCULATE(INFINI_DEVICE_ILUVATAR, nvidia);
 #endif
 #ifdef ENABLE_METAX_API
         CALCULATE(INFINI_DEVICE_METAX, metax);

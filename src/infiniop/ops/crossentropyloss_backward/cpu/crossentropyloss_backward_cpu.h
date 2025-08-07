@@ -10,8 +10,9 @@ typedef struct CrossEntropyLossBackWardOp {
 public:
     static constexpr size_t num_inputs = 2;
     template <typename T>
-    T operator()(const T &a, const T &b, const size_t N) const {
-        return (a - b) / N;
+    T operator()(const T &probs, const T &target, const size_t N) const {
+        // Cross Entropy Loss Backward: grad_logits = (probs - target) / batch_size
+        return (probs - target) / static_cast<T>(N);
     }
 } CrossEntropyLossBackWardOp;
 } // namespace op::CrossEntropyLossBackWard::cpu

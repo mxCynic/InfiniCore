@@ -1,18 +1,22 @@
 #ifndef __CROSSENTROPYLOSSBACKWARD_CUDA_H__
 #define __CROSSENTROPYLOSSBACKWARD_CUDA_H__
 
+#include <cstddef>
 namespace op::CrossEntropyLossBackWard::cuda {
 typedef struct CrossEntropyLossBackWardOp {
 public:
     static constexpr size_t num_inputs = 2;
     template <typename T>
-    __device__ __forceinline__ T operator()(const T &a, const T &b) const {
-        if constexpr (std::is_same_v<T, half> || std::is_same_v<T, cuda_bfloat16>) {
-            return __hadd(a, b);
+    __device__ __forceinline__ T operator()(const T &probs, const T &target, const float N) const {
+        // Cross Entropy Loss Backward: grad_logits = (probs - target) / batch_size
+        if constexpr (std::is_same_v<T, half>) {
+            return __hdiv(__hsub(probs, target), __float2half(N));
+        } else if constexpr (std::is_same_v<T, cuda_bfloat16>) {
+            return __hdiv(__hsub(probs, target), __float2bfloat16(N));
         } else if constexpr (std::is_same_v<T, float>) {
-            return __fadd_rd(a, b);
+            return __fdiv_rn(__fsub_rn(probs, target), N);
         } else {
-            return a + b;
+            return (probs - target) / N;
         }
     }
 } CrossEntropyLossBackWardOp;

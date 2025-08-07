@@ -1,5 +1,6 @@
 #include "crossentropyloss_backward_cpu.h"
 #include <functional>
+#include <iostream>
 #include <numeric>
 
 namespace op::CrossEntropyLossBackWard::cpu {
@@ -38,9 +39,10 @@ infiniStatus_t Descriptor::calculate(
     std::vector<const void *> inputs,
     void *stream) const {
 
-    auto output_desc = reinterpret_cast<infiniopTensorDescriptor_t>(output);
-    const auto shape = output_desc->shape();
-    const size_t N = std::accumulate(shape.begin(), shape.end() - 1, 1ull, std::multiplies<size_t>());
+    auto shape = _info.getAllInputShapes();
+    auto dim = _info.getNdim();
+    const size_t N = std::accumulate(shape, shape + dim - 1, 1ull, std::multiplies<size_t>());
+    std::cout << "cpp N: " << N << std::endl;
 
     switch (_dtype) {
     case INFINI_DTYPE_F16:
