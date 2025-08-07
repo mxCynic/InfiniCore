@@ -49,8 +49,8 @@ class Inplace(Enum):
 # Inplace options applied for each test case in _TEST_CASES_
 _INPLACE = [
     Inplace.OUT_OF_PLACE,
-    # Inplace.INPLACE_A,
-    # Inplace.INPLACE_B,
+    Inplace.INPLACE_A,
+    Inplace.INPLACE_B,
 ]
 
 
@@ -60,14 +60,11 @@ _TEST_CASES = [
     for test_case in _TEST_CASES_
     for inplace_item in _INPLACE
     # for mode in InfiniDivMode
-    for mode in [InfiniDivMode.FLOOR]
+    for mode in InfiniDivMode
 ]
 
 # Data types used for testing
 _TENSOR_DTYPES = [InfiniDtype.F16, InfiniDtype.BF16, InfiniDtype.F32, InfiniDtype.F64]
-# _TENSOR_DTYPES = [InfiniDtype.F16, InfiniDtype.F32, InfiniDtype.F64]
-# _TENSOR_DTYPES = [InfiniDtype.F16, InfiniDtype.F32, InfiniDtype.BF16]
-# _TENSOR_DTYPES = [InfiniDtype.BF16]
 
 # Tolerance map for different data types
 _TOLERANCE_MAP = {
@@ -84,7 +81,6 @@ NUM_ITERATIONS = 1000
 
 def div(c, a, b, mode):
     torch_mode = [None, "trunc", "floor"]
-    print("python mode: ", torch_mode[mode.value])
 
     torch.div(a, b, rounding_mode=torch_mode[mode.value], out=c)
 
@@ -170,11 +166,6 @@ def test(
     if DEBUG:
         debug(c.actual_tensor(), c.torch_tensor(), atol=atol, rtol=rtol)
 
-    print("a: \b", a.actual_tensor())
-    print("b: \b", b.actual_tensor())
-    print("infini:\b", c.actual_tensor())
-    print("torch:\b", c.torch_tensor())
-    # assert torch.allclose(c.actual_tensor(), c.torch_tensor(), atol=atol, rtol=rtol)
     assert_close(
         c.actual_tensor(), c.torch_tensor(), atol=atol, rtol=rtol, equal_nan=True
     )
